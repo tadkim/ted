@@ -1,14 +1,19 @@
-@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
 .rect-50-50 {
   transform: translate(-50%, -50);
   fill: #f4bcb0; }
 
+path {
+  stroke-width: 1.5px;
+  stroke: #666;
+  fill: red; }
+
+.big {
+  z-index: 1000;
+  fill: red; }
+
 body {
   font-family: 'Noto Sans KR', sans-serif;
   background-color: black; }
-
-svg {
-  background-color:#888; }
 
 #tooltip {
   /*position:absolute;*/

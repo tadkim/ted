@@ -18,6 +18,18 @@ var inits = {
 
 
 
+// Math test-------------------------------------
+// test with 'Beautiful 'Value
+var bScale = d3.scale.linear()
+	.domain([0, 3800000])
+	.range([1, 1.475]);
+
+var n2_scale = d3.scale.linear()
+	.domain([1, 1.475]);
+
+
+//--------------------------------------
+
 
 //SVG area init
 var svgWidth = 1200, svgHeight = 20800;
@@ -41,23 +53,25 @@ var eyesScale = d3.scale.linear()
 // var svg = d3.select("body").append("svg").attr("width", svgWidth).attr("height", svgHeight);
 var svg = d3.select("#heads").append("svg").attr("width", svgWidth).attr("height", svgHeight);
 
-//shape요소의 w, h (for test)
-var rectW = 100, rectH = 100;
-var rectX = 100, rectY = 100; //defalut
-var rectR = { w:25, h:25 };
 
 
+var shape = d3.superformula()
+	.type("explorer")
+	// .size(100000)
+	.size(10000)
+	.segments(3600);
 
 
-// COUNTER FOR ALGORITHM
-var counter = 0;
-var posArray = [100, 350, 600, 850, 1100];
-var xPosition, yPosition = 100;
+var path = svg.append("path")
+	.attr("class", "big")
+	.attr("transform", "translate(480,250)")
+	.attr("d", shape) ;
+
+
 
 var isArea = true;
 
-d3.tsv("data/ted0.2.tsv", function (error, dataset) {
-	// d3.tsv("data/ted0.2.min.tsv", function (error, dataset) {
+d3.tsv("data/ted0.3_420.tsv", function (error, dataset) {
 	var dbs = []; //for save all data
 	console.log(dbs);
 	if (error) { console.log("load data error!"); }
@@ -101,8 +115,6 @@ d3.tsv("data/ted0.2.tsv", function (error, dataset) {
 			var obj = {}; 
 			isArea = isAreaX(dbs[i - 1].x); // boolean
 
-
-
 			obj.x = (isArea == true) ? inits.x : dbs[i - 1].x + dbs[i - 1].w + inits.xGap;
 			obj.y = (isArea == true) ? dbs[i - 1].y + inits.yGap : dbs[i - 1].y;
 			obj.w = bodyScale(d.TOTAL_VIEWS);
@@ -112,16 +124,12 @@ d3.tsv("data/ted0.2.tsv", function (error, dataset) {
 			obj.ry = randomWidth.face_radius;
 			
 			dbs.push(obj); //2번 방법
-			
-
 		}
-
-
 	});
 	console.log(dbs);
 
 
-
+/*
 	//Shape test 1 - RECT
 	// var rect = svg.selectAll("g")
 	var rect = svg.selectAll("rect")
@@ -183,6 +191,100 @@ d3.tsv("data/ted0.2.tsv", function (error, dataset) {
 		.attr("class", function (d, i) { return "eyes_" + i + ""; })
 		.attr("r", function (d, i) { return dbs[i].r/4; })
 		.attr("fill", "black");
+*/
+
+
+	var shape = d3.superformula()
+		.type("explorer")
+		.size(1000)
+		.segments(3600)
+		.param("m", 1.362)
+		.param("n1", 1.362)
+		// .param("n2",9.237)
+		.param("n2", function(d,i) {
+			var resultMsg = getValues(d.TOTAL_VIEWS);
+			// console.log( resultMsg.valueB);
+			return resultMsg.valueB;
+		})
+		.param("n3", 5.938)
+		.param("a", -0.9625)
+		.param("b", function(d,i) {
+			var resultMsg = getValues(d.TOTAL_VIEWS);
+			// console.log( resultMsg.valueA);
+			return resultMsg.valueA;
+		});
+
+
+
+	// 		explorer: {m:1.362, n1:1.362, n2:9.237, n3:5.938, a:-0.9625, b:1.025},
+
+
+	var path = svg.selectAll("path")
+		.data(dataset).enter()
+		.append("path")
+		.attr("transform",function(d, i){ return 'translate('+ dbs[i].x + ',' + dbs[i].y + ') ';})
+		.attr("class", function(d,i){ return "path_" + i; })
+		.attr("d", shape)
+		.on("mouseover", function(d){
+			console.log(d);
+		});
+
+
+
+
+
+	// d3.selectAll("path")
+	// 	.attr("transform", "rotate(270deg)");
+		/*
+		path.attr("d", function(d,i) {
+
+		// console.log(this);
+			var resultMsg = getValues(d.Beautiful);
+			shape.param(resultMsg.nameA + "", +resultMsg.valueA);
+			return shape;
+		});
+		 */
+
+
+
+
+	// document.getElementById('s3').getAttribute("d")
+
+/*
+	path.attr("d", function(d,i) {
+		console.log(this);
+		var resultMsg = getValues(d.Beautiful);
+		shape.param(resultMsg.nameA, +resultMsg.valueA)
+		return shape;
+	});
+*/
+
+	// path.attr("d", shape.param(resultMsg.nameB, +resultMsg.valueB));
+	//
+	//
+	//
+	//
+	//
+	//
+	// function(d) {
+	// 		var resultMsg = getValues(d.Beautiful);
+	// 		console.log(resultMsg.nameA + ", " + resultMsg.valueA);
+	// 		shape.param(resultMsg.nameA, +resultMsg.valueA);
+	// 		shape.param(resultMsg.nameB, +resultMsg.valueB);
+	// 		explorer: {m:1.362, n1:1.362, n2:9.237, n3:5.938, a:-0.9625, b:1.025},
+	// 		return shape;
+	// 	});
+
+
+	//svg element의  형태 조정 based on data
+
+	//svg element의 위치 조정
+
+
+
+
+
+
 
 
 
@@ -193,25 +295,46 @@ d3.tsv("data/ted0.2.tsv", function (error, dataset) {
 	}
 	//콘텐츠 x영역 체크
 	function isAreaX(currentX) {
-		console.log(currentX);
+		// console.log(currentX);
 			return (currentX >= 1070) ? true : false;
 	}
 
+// Math test function ------------------------------------
+	function getValues(mv){
+		var result = {};
 
-/*
-		
-	
+		var bscale_result = bScale(mv);
+		//get depth 2 scale
+		var yummMin = ((12395600*bscale_result) - 1610725)/1805000;
+		var yummMax = ((140*bscale_result)+31) / 19;
+
+		n2_scale.range([yummMin, yummMax]);
+		var n2_scale_result = n2_scale(bscale_result);
+
+		result.nameA = "b";
+		result.nameB = "n2";
+		result.valueA = bscale_result;
+		result.valueB = n2_scale_result;
+
+		return result;
+	}
 
 
-	var mouths = svg.selectAll(".mouths")
-		.data(dataset).enter()
-		.append("rect")
-		.attr("x", function (d, i) { return getEyesX(i, "right"); })
-		.attr("y", function (d, i) { return getEyesY(i); })
-		.attr("class", function (d, i) { return "eyes_" + i + ""; })
-		.attr("r", 10)
-		.attr("fill", "black");	
-*/
+
+	/*
+
+
+
+
+		var mouths = svg.selectAll(".mouths")
+			.data(dataset).enter()
+			.append("rect")
+			.attr("x", function (d, i) { return getEyesX(i, "right"); })
+			.attr("y", function (d, i) { return getEyesY(i); })
+			.attr("class", function (d, i) { return "eyes_" + i + ""; })
+			.attr("r", 10)
+			.attr("fill", "black");
+	*/
 
 	//getEye Position : x
 	function getEyesX(e_i, e_dir) {

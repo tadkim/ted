@@ -71,7 +71,7 @@
   }
 
   var _superformulaTypes = {
-    
+    explorer: {m:1.362, n1:1.362, n2:9.237, n3:5.938, a:-0.9625, b:1.025},
     asterisk: {m:12.01, n1:17.15, n2:2.975, n3:3.650, a:1.025, b:-0.2875},
     bean: {m: 2, n1: 1, n2: 4, n3: 8, a: 1, b: 1},
     butterfly: {m: 3, n1: 1, n2: 6, n3: 2, a: .6, b: 1},

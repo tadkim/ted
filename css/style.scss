@@ -14,15 +14,26 @@ $sal : #F7EFFF;
   fill :rgb(244, 188, 176);
 }
 
+path {
+  stroke-width: 1.5px;
+  stroke: #666;
+  fill: red;
+}
+
+.big{
+  z-index:1000;
+  fill:red;
+}
 
 
-@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
+
+//@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
 body{
   font-family: 'Noto Sans KR', sans-serif;
   background-color:black;
 }
 svg {
-  background-color:$color_main;
+  //background-color:$color_main;
 }
 #tooltip{
   /*position:absolute;*/
