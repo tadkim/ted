@@ -5,27 +5,34 @@
 
 // var dbs = d3.range(2187); //for save all data
 var inits = {
-	x: 100,
-	y: 100,
-	w: 100,
-	h: 100,
+	x: 100, y: 100,
+	w: 100, h: 100,
 	r: 10,
-	rx: 10,
-	ry: 10,
-	xGap: 22,
-	yGap: 110
+	rx: 10, ry: 10,
+	xGap: 22, yGap: 110
 };
+
+
 
 
 
 // Math test-------------------------------------
 // test with 'Beautiful 'Value
 var bScale = d3.scale.linear()
-	.domain([0, 3800000])
+	.domain([0, 39000000])
 	.range([1, 1.475]);
 
+
+var scale_totalview = d3.scale.linear()
+	.domain([0, 39000000])
+	.range([400, 1000]);
+
+
+
 var n2_scale = d3.scale.linear()
-	.domain([1, 1.475]);
+	// .domain([1, 1.475]); //1차 방법
+	.domain([0, 3800000]); // 2차 방법
+
 
 
 //--------------------------------------
@@ -70,11 +77,13 @@ var path = svg.append("path")
 
 
 var isArea = true;
-
-d3.tsv("data/ted0.3_420.tsv", function (error, dataset) {
+// d3.tsv("data/ted0.2.tsv", function (error, dataset) {
+d3.tsv("data/ted0.3_30.tsv", function (error, dataset) {
 	var dbs = []; //for save all data
 	console.log(dbs);
 	if (error) { console.log("load data error!"); }
+	var testValue = getValues(6014582);
+	console.log(testValue);
 
 
 	//Scale domain set
@@ -93,13 +102,13 @@ d3.tsv("data/ted0.3_420.tsv", function (error, dataset) {
 			eyes: Math.floor(Math.random() * 10) + 11,
 			mouths: Math.floor(Math.random() * 40) + 50
 		};
-		
+
 
 		var views = d.TOTAL_VIEWS.replace(/,/gi, '');
 		d.TOTAL_VIEWS = +views;
 		d.Beautiful = +d.Beautiful;
 
-		//for dbs
+		//for dbs --------------------------------------------------------------------------------------------------
 		if (i === 0) {
 			obj.x = +inits.x;
 			obj.y = +inits.y;
@@ -108,11 +117,11 @@ d3.tsv("data/ted0.3_420.tsv", function (error, dataset) {
 			obj.r = +inits.r;
 			obj.rx = +inits.rx;
 			obj.ry = +inits.ry;
-			
+
 			dbs.push(obj); //2번 방법
 		} else {
 			//콘텐츠영역 30 < x < 1070을 벗어날 경우
-			var obj = {}; 
+			var obj = {};
 			isArea = isAreaX(dbs[i - 1].x); // boolean
 
 			obj.x = (isArea == true) ? inits.x : dbs[i - 1].x + dbs[i - 1].w + inits.xGap;
@@ -122,103 +131,56 @@ d3.tsv("data/ted0.3_420.tsv", function (error, dataset) {
 			obj.r = eyesScale(d.Beautiful);
 			obj.rx = randomWidth.face_radius;
 			obj.ry = randomWidth.face_radius;
-			
+
 			dbs.push(obj); //2번 방법
 		}
 	});
 	console.log(dbs);
+	//end dbs --------------------------------------------------------------------------------------------------
 
 
-/*
-	//Shape test 1 - RECT
-	// var rect = svg.selectAll("g")
-	var rect = svg.selectAll("rect")
-		.data(dataset).enter()
-		.append("rect")
-		.attr("x", function (d, i) { return dbs[i].x; })
-		.attr("y", function (d, i) { return dbs[i].y; })
-		.attr("width", function (d, i) { return dbs[i].w; }) //default
-		.attr("height", function (d, i) { return dbs[i].w; })
-		.attr("rx", function (d, i) { return dbs[i].rx; })
-		.attr("ry", function (d, i) { return dbs[i].ry; })
-		.attr("fill", "#f4bcb0")
-		.attr("class", function (d, i) { return "face_" + i + ""; })
-		.on("mouseover", function (d) {
-			console.log(d);
-		})
-		.on("mouseout", function (d) {
-		});
-	// .attr("fill", function (d) { return colorThreshold(d.Beautiful); });
+	var shapeTypes = (function(d, i){
+		console.log(d);
+		return d;
+	});
 
-
-
-	//EYE - outer 	
-	var eyes_left = svg.selectAll(".eyels-right")
-		.data(dataset).enter()
-		.append("circle")
-		.attr("cx", function (d, i) { return getEyesX(i, "left"); })
-		.attr("cy", function (d, i) { return getEyesY(i); })
-		.attr("class", function (d, i) { return "eyes_" + i + ""; })
-		.attr("r", function (d, i) { return dbs[i].r; })
-		.attr("fill", "white");
-
-
-	var eyes_right = svg.selectAll(".eyes-inner-left")
-		.data(dataset).enter()
-		.append("circle")
-		.attr("cx", function (d, i) { return getEyesX(i, "right"); })
-		.attr("cy", function (d, i) { return getEyesY(i); })
-		.attr("class", function (d, i) { return "eyes_" + i + ""; })
-		.attr("r", function (d, i) { return dbs[i].r; })
-		.attr("fill", "white");
-
-	//EYE - inner 	
-	var eyes_inner_left = svg.selectAll(".eyels-right")
-		.data(dataset).enter()
-		.append("circle")
-		.attr("cx", function (d, i) { return getEyesX(i, "left"); })
-		.attr("cy", function (d, i) { return getEyesY(i); })
-		.attr("class", function (d, i) { return "eyes_" + i + ""; })
-		.attr("r", function (d, i) { return dbs[i].r/4; })
-		.attr("fill", "black");
-
-
-	var eyes_inner_right = svg.selectAll(".eyes-inner-left")
-		.data(dataset).enter()
-		.append("circle")
-		.attr("cx", function (d, i) { return getEyesX(i, "right"); })
-		.attr("cy", function (d, i) { return getEyesY(i); })
-		.attr("class", function (d, i) { return "eyes_" + i + ""; })
-		.attr("r", function (d, i) { return dbs[i].r/4; })
-		.attr("fill", "black");
-*/
-
-
+	//PATH shape ---------------------------------------------------------------------------------------------
 	var shape = d3.superformula()
-		.type("explorer")
+		.type(function (d) { return d.Role_refine.toLowerCase(); }) //직업이름으로 기본 shape부여
 		.size(1000)
-		.segments(3600)
+		.segments(3600);
+
+	//로드된 shp의 스타일 변경 - Param단위
+	shape
+		.param("m", function(d){ return setParameter_m(d); })
+		.param("n1", function(d){ return setParameter_n1(d); })
+		.param("n2", function(d){ return setParameter_n2(d); })
+		.param("n3", function(d){ return setParameter_n3(d); })
+		.param("a", function(d){ return setParameter_a(d); })
+		.param("b", function(d){ return setParameter_b(d); });
+
+
+
+		/*
 		.param("m", 1.362)
 		.param("n1", 1.362)
-		// .param("n2",9.237)
 		.param("n2", function(d,i) {
-			var resultMsg = getValues(d.TOTAL_VIEWS);
-			// console.log( resultMsg.valueB);
+			var resultMsg = getValues(d.TOTAL_VIEWS, d.Role_refine);
 			return resultMsg.valueB;
 		})
 		.param("n3", 5.938)
 		.param("a", -0.9625)
 		.param("b", function(d,i) {
 			var resultMsg = getValues(d.TOTAL_VIEWS);
-			// console.log( resultMsg.valueA);
 			return resultMsg.valueA;
 		});
+		*/
+	//END PATH shape ---------------------------------------------------------------------------------------------
 
 
 
-	// 		explorer: {m:1.362, n1:1.362, n2:9.237, n3:5.938, a:-0.9625, b:1.025},
 
-
+	//PATH element  ---------------------------------------------------------------------------------------------
 	var path = svg.selectAll("path")
 		.data(dataset).enter()
 		.append("path")
@@ -228,64 +190,107 @@ d3.tsv("data/ted0.3_420.tsv", function (error, dataset) {
 		.on("mouseover", function(d){
 			console.log(d);
 		});
-
-
-
-
-
-	// d3.selectAll("path")
-	// 	.attr("transform", "rotate(270deg)");
-		/*
-		path.attr("d", function(d,i) {
-
-		// console.log(this);
-			var resultMsg = getValues(d.Beautiful);
-			shape.param(resultMsg.nameA + "", +resultMsg.valueA);
-			return shape;
-		});
-		 */
-
-
-
-
-	// document.getElementById('s3').getAttribute("d")
-
-/*
-	path.attr("d", function(d,i) {
-		console.log(this);
-		var resultMsg = getValues(d.Beautiful);
-		shape.param(resultMsg.nameA, +resultMsg.valueA)
-		return shape;
-	});
-*/
-
-	// path.attr("d", shape.param(resultMsg.nameB, +resultMsg.valueB));
-	//
-	//
-	//
-	//
-	//
-	//
-	// function(d) {
-	// 		var resultMsg = getValues(d.Beautiful);
-	// 		console.log(resultMsg.nameA + ", " + resultMsg.valueA);
-	// 		shape.param(resultMsg.nameA, +resultMsg.valueA);
-	// 		shape.param(resultMsg.nameB, +resultMsg.valueB);
-	// 		explorer: {m:1.362, n1:1.362, n2:9.237, n3:5.938, a:-0.9625, b:1.025},
-	// 		return shape;
-	// 	});
-
-
-	//svg element의  형태 조정 based on data
-
-	//svg element의 위치 조정
+	//PATH element ---------------------------------------------------------------------------------------------
 
 
 
 
 
 
+// Math test function ------------------------------------
+	function getValues(mv, role_nm){
+		var resultFunction;
 
+		switch(role_nm) {
+			case "Explorer":
+				resultFunction = explorer(mv);
+				break;
+			case "Art":
+				resultFunction = Art(mv);
+				break;
+			case "Management":
+				resultFunction = Management(mv);
+				break;
+			default:
+				 resultFunction = explorer(mv);
+				break;
+		}
+
+		return resultFunction;
+
+
+
+
+		function explorer(mv){
+			var result = {};
+
+			var scale_b = d3.scale.linear().domain([0, 39000000]).range([1, 1.475]);
+			var scale_n2 = d3.scale.linear().domain([0, 39000000]);
+
+			var scale_b_value = scale_b(mv);
+
+
+			var n2_min = ((12395600*scale_b_value) - 1610725)/1805000;
+			var n2_max = ((140*scale_b_value)+31) / 19;
+
+			scale_n2.range([n2_min, n2_max]);
+			var scale_n2_value = scale_n2(mv);
+
+			result.nameA = "b";
+			result.nameB = "n2";
+			result.valueA = scale_b_value;
+			result.valueB = scale_n2_value;
+
+			return result;
+		}
+		function Art(mv){
+			var result = {};
+
+			var scale_b = d3.scale.linear().domain([0, 39000000]).range([1, 1.475]);
+			var scale_n2 = d3.scale.linear().domain([0, 39000000]);
+
+			var scale_b_value = scale_b(mv);
+
+
+			var n2_min = ((12395600*scale_b_value) - 1610725)/1805000;
+			var n2_max = ((140*scale_b_value)+31) / 19;
+
+			scale_n2.range([n2_min, n2_max]);
+			var scale_n2_value = scale_n2(mv);
+
+			result.nameA = "b";
+			result.nameB = "n2";
+			result.valueA = scale_b_value;
+			result.valueB = scale_n2_value;
+
+			return result;
+		}
+		function Management(mv){
+			var result = {};
+
+			var scale_b = d3.scale.linear().domain([0, 39000000]).range([1, 1.475]);
+			var scale_n2 = d3.scale.linear().domain([0, 39000000]);
+
+			var scale_b_value = scale_b(mv);
+
+
+			var n2_min = ((12395600*scale_b_value) - 1610725)/1805000;
+			var n2_max = ((140*scale_b_value)+31) / 19;
+
+			scale_n2.range([n2_min, n2_max]);
+			var scale_n2_value = scale_n2(mv);
+
+			result.nameA = "b";
+			result.nameB = "n2";
+			result.valueA = scale_b_value;
+			result.valueB = scale_n2_value;
+
+			return result;
+		}
+
+
+
+	}
 
 
 	//콘텐츠 x영역 체크
@@ -296,45 +301,9 @@ d3.tsv("data/ted0.3_420.tsv", function (error, dataset) {
 	//콘텐츠 x영역 체크
 	function isAreaX(currentX) {
 		// console.log(currentX);
-			return (currentX >= 1070) ? true : false;
+		return (currentX >= 1070) ? true : false;
 	}
 
-// Math test function ------------------------------------
-	function getValues(mv){
-		var result = {};
-
-		var bscale_result = bScale(mv);
-		//get depth 2 scale
-		var yummMin = ((12395600*bscale_result) - 1610725)/1805000;
-		var yummMax = ((140*bscale_result)+31) / 19;
-
-		n2_scale.range([yummMin, yummMax]);
-		var n2_scale_result = n2_scale(bscale_result);
-
-		result.nameA = "b";
-		result.nameB = "n2";
-		result.valueA = bscale_result;
-		result.valueB = n2_scale_result;
-
-		return result;
-	}
-
-
-
-	/*
-
-
-
-
-		var mouths = svg.selectAll(".mouths")
-			.data(dataset).enter()
-			.append("rect")
-			.attr("x", function (d, i) { return getEyesX(i, "right"); })
-			.attr("y", function (d, i) { return getEyesY(i); })
-			.attr("class", function (d, i) { return "eyes_" + i + ""; })
-			.attr("r", 10)
-			.attr("fill", "black");
-	*/
 
 	//getEye Position : x
 	function getEyesX(e_i, e_dir) {
@@ -361,8 +330,8 @@ d3.tsv("data/ted0.3_420.tsv", function (error, dataset) {
 			faceH = $($thisIndex).attr("height");
 		return parseInt(faceY) + parseInt((faceH/2));
 	}
-	
 
-	
-		
+
+
+
 }); // d3.tsv() - E -

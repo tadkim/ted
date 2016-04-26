@@ -21,47 +21,10 @@
 <script src="js/jquery-1.11.0.js"></script>
 <script src="js/d3.min.js"></script>
 <script src="js/superformulaTypes.js"></script>
+<script src="js/getValueByRole.js"></script>
 <!--<script src="js/app-0.0.1.js"></script>-->
 <!--<script src="js/app-test.js"></script>-->
 <script src="js/dbs.js"></script>
-<!--
-<script>
 
-
-    var mostView = 100; //10~ 100
-    var bScale = d3.scale.linear()
-            .domain([10, 100])
-            .range([1, 1.475]);
-
-    var n2_scale = d3.scale.linear()
-            .domain([1, 1.475]);
-
-    var resultMsg = getValues(mostView);
-    console.log("A : " + resultMsg[0] + ",  B : " + resultMsg[1]);
-
-
-    function getValues(mv){
-        var result = {};
-        var bscale_result = bScale(mv);
-
-        var yummMin = ((12395600*bscale_result) - 1610725)/1805000;
-        var yummMax = ((140*bscale_result)+31) / 19;
-
-        n2_scale.range([yummMin, yummMax]);
-
-
-        var n2_scale_result = n2_scale(bscale_result);
-
-        result.nameA = "b";
-        result.nameB = "n2";
-        result.valueA = bscale_result;
-        result.valueB = n2_scale_result;
-
-        return result;
-    }
-
-
-</script>
--->
 </body>
 </html>
