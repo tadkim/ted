@@ -78,13 +78,9 @@ var path = svg.append("path")
 
 var isArea = true;
 // d3.tsv("data/ted0.2.tsv", function (error, dataset) {
-d3.tsv("data/ted0.3_30.tsv", function (error, dataset) {
+d3.tsv("data/ted0.3_420.tsv", function (error, dataset) {
 	var dbs = []; //for save all data
-	console.log(dbs);
 	if (error) { console.log("load data error!"); }
-	var testValue = getValues(6014582);
-	console.log(testValue);
-
 
 	//Scale domain set
 	xScale.domain([0, 2187]);
@@ -161,20 +157,6 @@ d3.tsv("data/ted0.3_30.tsv", function (error, dataset) {
 
 
 
-		/*
-		.param("m", 1.362)
-		.param("n1", 1.362)
-		.param("n2", function(d,i) {
-			var resultMsg = getValues(d.TOTAL_VIEWS, d.Role_refine);
-			return resultMsg.valueB;
-		})
-		.param("n3", 5.938)
-		.param("a", -0.9625)
-		.param("b", function(d,i) {
-			var resultMsg = getValues(d.TOTAL_VIEWS);
-			return resultMsg.valueA;
-		});
-		*/
 	//END PATH shape ---------------------------------------------------------------------------------------------
 
 
@@ -190,107 +172,18 @@ d3.tsv("data/ted0.3_30.tsv", function (error, dataset) {
 		.on("mouseover", function(d){
 			console.log(d);
 		});
+
+
+	var text = svg.selectAll("text")
+		.data(dataset).enter()
+		.append("text")
+		.attr("x", function(d,i){ return dbs[i].x-20; })
+		.attr("y", function(d,i){ return dbs[i].y+40; })
+		.text(function(d){ return d.Role_refine;})
+		.style("color", "white");
+
 	//PATH element ---------------------------------------------------------------------------------------------
 
-
-
-
-
-
-// Math test function ------------------------------------
-	function getValues(mv, role_nm){
-		var resultFunction;
-
-		switch(role_nm) {
-			case "Explorer":
-				resultFunction = explorer(mv);
-				break;
-			case "Art":
-				resultFunction = Art(mv);
-				break;
-			case "Management":
-				resultFunction = Management(mv);
-				break;
-			default:
-				 resultFunction = explorer(mv);
-				break;
-		}
-
-		return resultFunction;
-
-
-
-
-		function explorer(mv){
-			var result = {};
-
-			var scale_b = d3.scale.linear().domain([0, 39000000]).range([1, 1.475]);
-			var scale_n2 = d3.scale.linear().domain([0, 39000000]);
-
-			var scale_b_value = scale_b(mv);
-
-
-			var n2_min = ((12395600*scale_b_value) - 1610725)/1805000;
-			var n2_max = ((140*scale_b_value)+31) / 19;
-
-			scale_n2.range([n2_min, n2_max]);
-			var scale_n2_value = scale_n2(mv);
-
-			result.nameA = "b";
-			result.nameB = "n2";
-			result.valueA = scale_b_value;
-			result.valueB = scale_n2_value;
-
-			return result;
-		}
-		function Art(mv){
-			var result = {};
-
-			var scale_b = d3.scale.linear().domain([0, 39000000]).range([1, 1.475]);
-			var scale_n2 = d3.scale.linear().domain([0, 39000000]);
-
-			var scale_b_value = scale_b(mv);
-
-
-			var n2_min = ((12395600*scale_b_value) - 1610725)/1805000;
-			var n2_max = ((140*scale_b_value)+31) / 19;
-
-			scale_n2.range([n2_min, n2_max]);
-			var scale_n2_value = scale_n2(mv);
-
-			result.nameA = "b";
-			result.nameB = "n2";
-			result.valueA = scale_b_value;
-			result.valueB = scale_n2_value;
-
-			return result;
-		}
-		function Management(mv){
-			var result = {};
-
-			var scale_b = d3.scale.linear().domain([0, 39000000]).range([1, 1.475]);
-			var scale_n2 = d3.scale.linear().domain([0, 39000000]);
-
-			var scale_b_value = scale_b(mv);
-
-
-			var n2_min = ((12395600*scale_b_value) - 1610725)/1805000;
-			var n2_max = ((140*scale_b_value)+31) / 19;
-
-			scale_n2.range([n2_min, n2_max]);
-			var scale_n2_value = scale_n2(mv);
-
-			result.nameA = "b";
-			result.nameB = "n2";
-			result.valueA = scale_b_value;
-			result.valueB = scale_n2_value;
-
-			return result;
-		}
-
-
-
-	}
 
 
 	//콘텐츠 x영역 체크

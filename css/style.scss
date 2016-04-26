@@ -16,13 +16,15 @@ $sal : #F7EFFF;
 
 path {
   stroke-width: 1.5px;
-  stroke: #666;
-  fill: red;
+  stroke: white;
+  fill: $color_main;
 }
 
-.big{
+text{
+  font-size:8px;
   z-index:1000;
-  fill:red;
+  fill:white;
+
 }
 
 

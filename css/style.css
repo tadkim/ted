@@ -4,12 +4,13 @@
 
 path {
   stroke-width: 1.5px;
-  stroke: #666;
-  fill: red; }
+  stroke: white;
+  fill: #f4bcb0; }
 
-.big {
+text {
+  font-size: 8px;
   z-index: 1000;
-  fill: red; }
+  fill: white; }
 
 body {
   font-family: 'Noto Sans KR', sans-serif;
