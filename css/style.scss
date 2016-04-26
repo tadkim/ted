@@ -1,0 +1,52 @@
+@charset "utf-8";
+
+$color_bg : rgb(211, 221, 230);
+$color_base : white;
+$color_text : black;
+$color_main :rgb(244, 188, 176);
+$color_strong : rgb(137, 73, 52);
+
+
+$sal : #F7EFFF;
+
+.rect-50-50{
+  transform: translate(-50%, -50);
+  fill :rgb(244, 188, 176);
+}
+
+
+
+@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
+body{
+  font-family: 'Noto Sans KR', sans-serif;
+  background-color:black;
+}
+svg {
+  background-color:$color_main;
+}
+#tooltip{
+  /*position:absolute;*/
+  position:fixed;
+  width:auto;
+  height:auto;
+  margin: 30px 30px;
+  padding:10px;
+  font-size:14px;
+  background-color:rgba(0, 0, 0, 0.8);
+}
+#tooltip.hidden{
+  display:none;
+}
+#tooltip span, p{
+  font-size:12px;
+  color:#fff;
+  font-weight:100;
+}
+
+.tooltip_label_title{
+  font-size:16px;
+  font-weight:500 !important;
+}
+.tooltip_label{
+  font-weight:500 !important;
+}
