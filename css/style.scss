@@ -17,13 +17,13 @@ $sal : #F7EFFF;
 path {
   stroke-width: 1.5px;
   stroke: white;
-  fill: $color_main;
+  fill: #eac2a6;
 }
 
 text{
   font-size:8px;
   z-index:1000;
-  fill:white;
+  fill:black;
 
 }
 
@@ -31,8 +31,8 @@ text{
 
 //@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
 body{
-  font-family: 'Noto Sans KR', sans-serif;
-  background-color:black;
+  //font-family: 'Noto Sans KR', sans-serif;
+  background-color:$color_bg;
 }
 svg {
   //background-color:$color_main;

@@ -5,16 +5,15 @@
 path {
   stroke-width: 1.5px;
   stroke: white;
-  fill: #f4bcb0; }
+  fill: #eac2a6; }
 
 text {
   font-size: 8px;
   z-index: 1000;
-  fill: white; }
+  fill: black; }
 
 body {
-  font-family: 'Noto Sans KR', sans-serif;
-  background-color: black; }
+  background-color: #d3dde6; }
 
 #tooltip {
   /*position:absolute;*/

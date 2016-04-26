@@ -17,22 +17,11 @@ var inits = {
 
 
 // Math test-------------------------------------
-// test with 'Beautiful 'Value
-var bScale = d3.scale.linear()
-	.domain([0, 39000000])
-	.range([1, 1.475]);
 
 
 var scale_totalview = d3.scale.linear()
 	.domain([0, 39000000])
 	.range([400, 1000]);
-
-
-
-var n2_scale = d3.scale.linear()
-	// .domain([1, 1.475]); //1차 방법
-	.domain([0, 3800000]); // 2차 방법
-
 
 
 //--------------------------------------
@@ -56,29 +45,18 @@ var bodyScale = d3.scale.linear()
 var eyesScale = d3.scale.linear()
 	.domain([0, 9200]).range([4, 30]);
 
+var opaScale = d3.scale.linear()
+	.domain([0, 39000000]).range([0.1, 1.0]);
+
 //Create SVG element
 // var svg = d3.select("body").append("svg").attr("width", svgWidth).attr("height", svgHeight);
 var svg = d3.select("#heads").append("svg").attr("width", svgWidth).attr("height", svgHeight);
 
 
 
-var shape = d3.superformula()
-	.type("explorer")
-	// .size(100000)
-	.size(10000)
-	.segments(3600);
-
-
-var path = svg.append("path")
-	.attr("class", "big")
-	.attr("transform", "translate(480,250)")
-	.attr("d", shape) ;
-
-
-
 var isArea = true;
-// d3.tsv("data/ted0.2.tsv", function (error, dataset) {
-d3.tsv("data/ted0.3_420.tsv", function (error, dataset) {
+d3.tsv("data/ted0.2.tsv", function (error, dataset) {
+// d3.tsv("data/ted0.3_420.tsv", function (error, dataset) {
 	var dbs = []; //for save all data
 	if (error) { console.log("load data error!"); }
 
@@ -135,11 +113,6 @@ d3.tsv("data/ted0.3_420.tsv", function (error, dataset) {
 	//end dbs --------------------------------------------------------------------------------------------------
 
 
-	var shapeTypes = (function(d, i){
-		console.log(d);
-		return d;
-	});
-
 	//PATH shape ---------------------------------------------------------------------------------------------
 	var shape = d3.superformula()
 		.type(function (d) { return d.Role_refine.toLowerCase(); }) //직업이름으로 기본 shape부여
@@ -148,15 +121,12 @@ d3.tsv("data/ted0.3_420.tsv", function (error, dataset) {
 
 	//로드된 shp의 스타일 변경 - Param단위
 	shape
-		.param("m", function(d,i){ console.log(i); return setParameter_m(d); })
+		.param("m", function(d,i){return setParameter_m(d); })
 		.param("n1", function(d){ return setParameter_n1(d); })
 		.param("n2", function(d){ return setParameter_n2(d); })
 		.param("n3", function(d){ return setParameter_n3(d); })
 		.param("a", function(d){ return setParameter_a(d); })
 		.param("b", function(d){ return setParameter_b(d); });
-
-
-
 	//END PATH shape ---------------------------------------------------------------------------------------------
 
 
@@ -166,9 +136,22 @@ d3.tsv("data/ted0.3_420.tsv", function (error, dataset) {
 	var path = svg.selectAll("path")
 		.data(dataset).enter()
 		.append("path")
-		.attr("transform",function(d, i){ return 'translate('+ dbs[i].x + ',' + dbs[i].y + ') ';})
+		.attr("transform",function(d, i){
+			var cu_nm = d.Role_refine.toLowerCase();
+			var rot = 0;
+			if( cu_nm === "art" || cu_nm === "public" || cu_nm === "religion" ){
+				return 'translate('+  Math.round(dbs[i].x)  + ',' + dbs[i].y + ') rotate(90)';
+			} else if(cu_nm === "media" || cu_nm === "management" || cu_nm === "humanist" || cu_nm === "explorer"){
+				return 'translate('+  Math.round(dbs[i].x)  + ',' + dbs[i].y + ') rotate(270)';
+			} else {
+				return 'translate('+  Math.round(dbs[i].x)  + ',' + dbs[i].y + ')';
+			}
+		})
 		.attr("class", function(d,i){ return "path_" + i; })
 		.attr("d", shape)
+		.style("opacity", function(d){
+			return opaScale(d.TOTAL_VIEWS);
+		})
 		.on("mouseover", function(d){
 			console.log(d);
 		});
@@ -179,12 +162,9 @@ d3.tsv("data/ted0.3_420.tsv", function (error, dataset) {
 		.append("text")
 		.attr("x", function(d,i){ return dbs[i].x-20; })
 		.attr("y", function(d,i){ return dbs[i].y+40; })
-		.text(function(d){ return d.Role_refine;})
-		.style("color", "white");
+		.text(function(d){ return d.Role_refine;});
 
 	//PATH element ---------------------------------------------------------------------------------------------
-
-
 
 	//콘텐츠 x영역 체크
 	function constrainX(x_i, xIndex) {
@@ -223,6 +203,7 @@ d3.tsv("data/ted0.3_420.tsv", function (error, dataset) {
 			faceH = $($thisIndex).attr("height");
 		return parseInt(faceY) + parseInt((faceH/2));
 	}
+
 
 
 
