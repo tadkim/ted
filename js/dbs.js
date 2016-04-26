@@ -148,7 +148,7 @@ d3.tsv("data/ted0.3_420.tsv", function (error, dataset) {
 
 	//로드된 shp의 스타일 변경 - Param단위
 	shape
-		.param("m", function(d){ return setParameter_m(d); })
+		.param("m", function(d,i){ console.log(i); return setParameter_m(d); })
 		.param("n1", function(d){ return setParameter_n1(d); })
 		.param("n2", function(d){ return setParameter_n2(d); })
 		.param("n3", function(d){ return setParameter_n3(d); })

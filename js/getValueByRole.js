@@ -11,15 +11,15 @@ var default_sv = {
 	media: {m:0.6875, n1:0.3500, n2:2.825, n3:8.863, a:-3.625, b:-1.675},
 	vip: {m: 4, n1: 2, n2: 2, n3: 2, a: 1, b: 1},
 	public: {m: 6, n1: .3, n2: 0, n3: 10, a: 1, b: 1},
-	humanist: {m: 8, n1: 10, n2: -1, n3: -8, a: 1, b: 1},
+	humanist: {m:1.915, n1:39.60, n2:113.1, n3:19.18, a:1.250, b:0.5375},
 	science: {m: 8, n1: 1.3, n2: .01, n3: 8, a: 1, b: 1},
 	profession: {m:4, n1:632.5, n2:421.8, n3:100, a:2, b:1},
 	religion: {m:4, n1:632.5, n2:421.8, n3:100, a:2, b:1}
 };
 
 // m ========================================================
-function setParameter_m(d) {
-	var currentRole_nm = d.Role_refine.toLowerCase();
+function setParameter_m(data_row) {
+	var currentRole_nm = data_row.Role_refine.toLowerCase();
 	var result_m;
 
 	switch (currentRole_nm) {
@@ -30,7 +30,7 @@ function setParameter_m(d) {
 			result_m = default_sv.media.m;
 			break;
 		case "management":
-			result_m = getParam_management(d.TOTAL_VIEWS).valueM;
+			result_m = getParam_management(data_row.TOTAL_VIEWS).valueM;
 			break;
 		case "public":
 			result_m = default_sv.public.m;
@@ -125,7 +125,7 @@ function setParameter_n2(data_row) {
 			result_n2 = getParam_profession(data_row.TOTAL_VIEWS).valueN2;
 			break;
 		case "explorer":
-			result_n2 = getParam_explorer(data_row.TOTAL_VIEWS).valueB;
+			result_n2 = getParam_explorer(data_row.TOTAL_VIEWS).valueN2;
 			break;
 		case "religion":
 			result_n2 = default_sv.religion.n2;
@@ -251,7 +251,7 @@ function setParameter_b(data_row) {
 			result_b = default_sv.profession.b;
 			break;
 		case "explorer":
-			result_b = getParam_explorer(data_row.TOTAL_VIEWS).valueA;
+			result_b = getParam_explorer(data_row.TOTAL_VIEWS).valueB;
 			break;
 		case "religion":
 			result_b = default_sv.religion.b;
@@ -298,8 +298,8 @@ function getParam_explorer(mv){
 
 	result.nameA = "b";
 	result.nameB = "n2";
-	result.valueA = scale_b_value;
-	result.valueB = scale_n2_value;
+	result.valueB = scale_b_value;
+	result.valueN2 = scale_n2_value;
 
 	return result;
 }
@@ -342,10 +342,10 @@ function getParam_profession(mv){
 	scale_n2.range([n2_min, n2_max]);
 	var scale_n2_value = scale_n2(mv);
 
-	result.nameM = "n1";
-	result.nameA = "n2";
-	result.valueM = scale_n1_value;
-	result.valueA= scale_n2_value;
+	result.nameN1 = "n1";
+	result.nameN2 = "n2";
+	result.valueN1 = scale_n1_value;
+	result.valueN2= scale_n2_value;
 
 	return result;
 }
