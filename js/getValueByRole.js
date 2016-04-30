@@ -129,7 +129,8 @@ function setParameter_n2(data_row) {
 			result_n2 = default_sv.humanist.n2;
 			break;
 		case "profession":
-			result_n2 = getParam_profession(data_row.TOTAL_VIEWS).valueN2;
+			// result_n2 = getParam_profession(data_row.TOTAL_VIEWS).valueN2;
+			result_n2 = getParam_profession(data_row.Beautiful).valueN2;
 			break;
 		case "explorer":
 			result_n2 = getParam_explorer(data_row.TOTAL_VIEWS).valueN2;
@@ -342,6 +343,8 @@ function getParam_profession(mv){
 	var result = {};
 	var scale_n1 = d3.scale.linear().domain([0, 39000000]).range([300, 670]); //n1, 300, 670
 	var scale_n2 = d3.scale.linear().domain([0, 39000000]);
+	// var scale_n2 = d3.scale.linear().domain([0, 9240]);
+
 	var scale_n1_value = scale_n1(mv);
 	var n2_min = ((8*scale_n1_value) + 9440)/37;
 	var n2_max = ((5*scale_n1_value)+18850) /37;

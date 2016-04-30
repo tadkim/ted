@@ -30,7 +30,7 @@ var yScale = d3.scale.linear() .range([0, svgHeight]);
 var colorScale = d3.scale.linear().range([100, 255]);
 
 //Scale of Shape
-var bodyScale = d3.scale.linear().domain([0, 38000000]).range([20, 100]);
+var bodyScale = d3.scale.linear().domain([0, 1523782]).range([20, 100]);
 var eyesScale = d3.scale.linear().domain([0, 9200]).range([4, 30]);
 var opaScale = d3.scale.linear().domain([0, 39000000]).range([0.1, 1.0]);
 
@@ -41,19 +41,22 @@ var svg = d3.select("#ted_head").append("svg").attr("width", svgWidth).attr("hei
 
 var isArea = true;
 // d3.tsv("data/ted0.2.min.tsv", function (error, dataset) {
-d3.tsv("data/ted0.2.tsv", function (error, dataset) {
+// d3.tsv("data/ted0.2.tsv", function (error, dataset) {
+d3.tsv("data/ted_q1.tsv", function (error, dataset) {
 // d3.tsv("data/ted0.3_30.tsv", function (error, dataset) {
 	var dbs = []; //for save all data
 	if (error) { console.log("load data error!"); }
 
 	//Scale domain set
 	xScale.domain([0, 2187]);
-	yScale.domain([0, 39000000]);
+	yScale.domain([0, 1523782]);
 	colorScale.domain([0, 9140]);
+	/*
 	//데이터 셋을 필터링 : Profession만 추출
 	dataset = dataset.filter(function(element){
-		return element.Role_refine === "Profession";
+		return element.Role_refine === "Art";
 	});
+	*/
 	//Data Type declare
 	dataset.forEach(function (d, i) {
 		// console.log(dbs);
@@ -177,7 +180,16 @@ d3.tsv("data/ted0.2.tsv", function (error, dataset) {
 			}
 		})
 		// .style("opacity", function(d){return opaScale(d.TOTAL_VIEWS);})
-		.on("mouseover", function(d){ console.log(d); });
+		.on("mouseover", function(d){
+			d3.selectAll("#tooltip").select(".tooltip_v1").text(d.NAME);
+			d3.selectAll("#tooltip").select(".tooltip_v2").text(numberWithCommas(d.TOTAL_VIEWS));
+			d3.selectAll("#tooltip").select(".tooltip_v3").text(numberWithCommas(d.Beautiful));
+
+			d3.selectAll("#tooltip").classed("hidden", false);
+		})
+		.on("mouseout", function(d){
+			d3.selectAll("#tooltip").class("hidden", true);
+		});
 
 
 	var text = svg.selectAll("text")
@@ -290,6 +302,8 @@ function mergeObjects(obj_a, obj_b) {
 }
 
 
-/* 결과 */
-// Object {a1: 1, b2: 2, c1: 3, c2: 4}
 
+//  numbertocom ------------------------------ ***
+function numberWithCommas(x) {
+	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
